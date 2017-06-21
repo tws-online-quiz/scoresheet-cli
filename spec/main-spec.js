@@ -27,8 +27,9 @@ describe('main()', () => {
         expect(readlineSync.question.calledOnce).toBe(true);
     });
 
-    xit('should go to add student info', () => {
-        readlineSync.question.returns(1);
+    it('should go to add student info', () => {
+        readlineSync.question.onFirstCall().returns('1');
+        readlineSync.question.onSecondCall().returns('3');
         main();
         expect(readlineSync.question.lastCall.args.join()).toBe("请输入学生信息（格式：姓名, 学号, 民族, 班级, 学科: 成绩, ...），按回车提交：");
     });
