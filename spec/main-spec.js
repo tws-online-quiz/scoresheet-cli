@@ -2,7 +2,7 @@ let sinon = require("sinon");
 let readlineSync = require("cli-interact");
 
 let main = require("../lib/main");
-let Command = require("../lib/command");
+let Command = require("../lib/command/command");
 
 describe('main()', () => {
     beforeEach(() => {
