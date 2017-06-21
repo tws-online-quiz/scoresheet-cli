@@ -2,6 +2,7 @@ let sinon = require("sinon");
 let readlineSync = require("cli-interact");
 
 let main = require("../lib/main");
+let Command = require("../lib/command");
 
 describe('main()', () => {
     beforeEach(() => {
@@ -13,7 +14,7 @@ describe('main()', () => {
     });
 
     it('should display main menu once started', () => {
-        readlineSync.question.returns('3');
+        readlineSync.question.returns(Command.MENU_EXIT);
         main();
         expect(readlineSync.question.args.join()).toBe(`1. 添加学生
 2. 生成成绩单
@@ -22,14 +23,14 @@ describe('main()', () => {
     });
 
     it('should exit', () => {
-        readlineSync.question.returns('3');
+        readlineSync.question.returns(Command.MENU_EXIT);
         main();
         expect(readlineSync.question.calledOnce).toBe(true);
     });
 
     it('should go to add student info', () => {
-        readlineSync.question.onFirstCall().returns('1');
-        readlineSync.question.onSecondCall().returns('3');
+        readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
+        readlineSync.question.onSecondCall().returns(Command.MENU_EXIT);
         main();
         expect(readlineSync.question.lastCall.args.join()).toBe("请输入学生信息（格式：姓名, 学号, 民族, 班级, 学科: 成绩, ...），按回车提交：");
     });
