@@ -43,7 +43,15 @@ describe('main()', () => {
         expect(readlineSync.question.args.join().includes("学生王大锤的成绩被添加")).toBe(true);
     });
 
-    it('should print score sheet', () => {
+    it('should print main menu when add student info succeed', () => {
+        readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
+        readlineSync.question.onSecondCall().returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70");
+        readlineSync.question.onThirdCall().returns(Command.MENU_EXIT);
+        main();
+        expect(readlineSync.question.lastCall.args.join().includes("请输入你的选择（1～3）：")).toBe(true);
+    });
+
+    xit('should print score sheet', () => {
         readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
         readlineSync.question.onSecondCall().returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70");
         readlineSync.question.onThirdCall().returns('2');
