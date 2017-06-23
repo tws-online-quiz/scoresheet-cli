@@ -30,13 +30,6 @@ describe('main()', () => {
         expect(readlineSync.question.calledOnce).toBe(true);
     });
 
-    it('should go to add student info', () => {
-        readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
-        readlineSync.question.onSecondCall().returns(Command.MENU_EXIT);
-        main();
-        expect(readlineSync.question.lastCall.args.join()).toBe("请输入学生信息（格式：姓名, 学号, 民族, 班级, 学科: 成绩, ...），按回车提交：");
-    });
-
     it('should add student info', () => {
         readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
         readlineSync.question.onSecondCall().returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70");
@@ -74,9 +67,10 @@ describe('main()', () => {
     });
 
     it('should ask to retry when add student info failed', () => {
+        let invalidStudentInfo = "3";
         readlineSync.question
             .onCall(0).returns(Command.MENU_ADD_STUDENT_INFO)
-            .onCall(1).returns("this_is_invalid_input")
+            .onCall(1).returns(invalidStudentInfo)
             .onCall(2).returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70")
             .onCall(3).returns(Command.MENU_EXIT);
         main();
