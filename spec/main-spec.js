@@ -82,4 +82,18 @@ describe('main()', () => {
         main();
         expect(readlineSync.question.thirdCall.args.join()).toBe('请按正确的格式输入（格式：姓名, 学号, 学科: 成绩, ...）：');
     });
+
+    it('should ask to retry when input invalid menu', () => {
+        let invalidMenuItem = 4;
+        readlineSync.question
+            .onCall(0).returns(invalidMenuItem)
+            .onCall(1).returns(Command.MENU_EXIT);
+
+        main();
+
+        expect(readlineSync.question.secondCall.args.join()).toBe(`1. 添加学生
+2. 生成成绩单
+3. 退出
+请输入你的选择（1～3）：`);
+    });
 });
