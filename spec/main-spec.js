@@ -72,4 +72,14 @@ describe('main()', () => {
 全班总分平均数：345
 全班总分中位数：345`);
     });
+
+    it('should ask to retry when add student info failed', () => {
+        readlineSync.question
+            .onCall(0).returns(Command.MENU_ADD_STUDENT_INFO)
+            .onCall(1).returns("this_is_invalid_input")
+            .onCall(2).returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70")
+            .onCall(3).returns(Command.MENU_EXIT);
+        main();
+        expect(readlineSync.question.thirdCall.args.join()).toBe('请按正确的格式输入（格式：姓名, 学号, 学科: 成绩, ...）：');
+    });
 });
