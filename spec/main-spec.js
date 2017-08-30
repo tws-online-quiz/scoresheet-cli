@@ -2,7 +2,7 @@ let sinon = require("sinon");
 let readlineSync = require("cli-interact");
 
 let Client = require("../lib/client");
-let Command = require("../lib/command/command");
+let Command = require("../lib/input");
 let {scoreService} = require("../lib/service/score_service");
 
 let client;
