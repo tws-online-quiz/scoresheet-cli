@@ -1,3 +1,3 @@
-const main = require('./lib/main');
+const Client = require('./lib/client');
 
-main();
+new Client().start();

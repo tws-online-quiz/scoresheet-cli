@@ -1,12 +1,15 @@
 let sinon = require("sinon");
 let readlineSync = require("cli-interact");
 
-let main = require("../lib/main");
+let Client = require("../lib/client");
 let Command = require("../lib/command/command");
 let {scoreService} = require("../lib/service/score_service");
 
-describe('main()', () => {
+let client;
+
+describe('Client', () => {
     beforeEach(() => {
+        client = new Client();
         sinon.stub(readlineSync, 'question');
         scoreService.students = [];
     });
@@ -15,9 +18,9 @@ describe('main()', () => {
         readlineSync.question.restore();
     });
 
-    it('should display main menu once started', () => {
+    it('should display client menu once started', () => {
         readlineSync.question.returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.args.join()).toBe(`1. 添加学生
 2. 生成成绩单
 3. 退出
@@ -26,7 +29,7 @@ describe('main()', () => {
 
     it('should exit', () => {
         readlineSync.question.returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.calledOnce).toBe(true);
     });
 
@@ -34,15 +37,15 @@ describe('main()', () => {
         readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
         readlineSync.question.onSecondCall().returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70");
         readlineSync.question.onThirdCall().returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.args.join().includes("学生王大锤的成绩被添加")).toBe(true);
     });
 
-    it('should print main menu when add student info succeed', () => {
+    it('should print client menu when add student info succeed', () => {
         readlineSync.question.onFirstCall().returns(Command.MENU_ADD_STUDENT_INFO);
         readlineSync.question.onSecondCall().returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70");
         readlineSync.question.onThirdCall().returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.lastCall.args.join().includes("请输入你的选择（1～3）：")).toBe(true);
     });
 
@@ -55,7 +58,7 @@ describe('main()', () => {
             .onCall(4).returns(Command.MENU_PRINT_SCORE_SHEET)
             .onCall(5).returns('001, 002')
             .onCall(6).returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.lastCall.args.join()).toBe(`成绩单
 姓名|数学|语文|英语|编程|平均分|总分 
 ========================
@@ -73,7 +76,7 @@ describe('main()', () => {
             .onCall(1).returns(invalidStudentInfo)
             .onCall(2).returns("王大锤, 001, 汉, 201701, 数学: 100, 语文: 90, 英语: 80, 编程: 70")
             .onCall(3).returns(Command.MENU_EXIT);
-        main();
+        client.start();
         expect(readlineSync.question.thirdCall.args.join()).toBe('请按正确的格式输入（格式：姓名, 学号, 学科: 成绩, ...）：');
     });
 
@@ -83,7 +86,7 @@ describe('main()', () => {
             .onCall(0).returns(invalidMenuItem)
             .onCall(1).returns(Command.MENU_EXIT);
 
-        main();
+        client.start();
 
         expect(readlineSync.question.secondCall.args.join()).toBe(`1. 添加学生
 2. 生成成绩单
