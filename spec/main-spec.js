@@ -18,7 +18,7 @@ describe('Client', () => {
         readlineSync.question.restore();
     });
 
-    it('should display client menu once started', () => {
+    it('should display main menu once started', () => {
         readlineSync.question.returns(Command.MENU_EXIT);
         client.start();
         expect(readlineSync.question.args.join()).toBe(`1. 添加学生
